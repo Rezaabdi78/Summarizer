@@ -3,7 +3,7 @@
             <section class="w-full h-full bodyWrapper">
                 <div class="headerCover">
                     <h1 class="headerTitle thick mb-4">خلاصه‌ساز هوشمند متن</h1>
-                    <h3 class="headerSubtitle">قدرت‌گرفته از سای‎فرکت (Syfract)</h3>        
+                    <h3 class="headerSubtitle"><!-- Subtitle Text here --></h3>        
                 </div>
                 <div class="blurred-box p-6">
                     <div class="wrapper">
