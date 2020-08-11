@@ -1,103 +1,108 @@
 <template>
-    <v-container fluid class="px-6">
-    <v-row align="right" >
-        <v-col class="d-inline-flex thick" cols="12" xs="4" sm="6" md="4" lg="4" xl="3" color="#03A9F4">
-            <v-select :items="items" label="Languages" solo></v-select>
-        </v-col>
-        <v-col class="d-inline-flex thick top-btn" cols="12" xs="3" sm="6" md="2" lg="2" xl="1">
-            <v-btn :x-large="x_larged" color="#0f4c81" class="btn white--text" @click="textBriefer">خلاصه سازی</v-btn>
-        </v-col>
-        </v-row>
+    <div>
+        <header class="headerWrapper">
+            <div class="headerCover">
+                <h1 class="headerTitle thick mb-4">خلاصه‌ساز هوشمند متن</h1>
+                <h3 class="headerSubtitle">قدرت‌گرفته از منبع قدرت</h3>        
+            </div>
+            <div id="particles-js" class="header">
+            </div>
+        </header>
+        
 
-        <v-row>
-            <v-col cols="12" md="7">
-                <h1 class="text-right thick ">متن ورودی</h1>
-                <v-textarea rows="8" class="thin"
-                outlined solo name="input"  v-model="raw_text" :placeholder="placeholder" :auto-grow="autoGrow" :clearable="clearable"></v-textarea>
-            </v-col>
-            <v-col cols="12" md="5">
-                    <h1 class="text-right thick ">متن پردازش شده</h1>
-                <div>
-                    <v-textarea rows="8" class="thin output"
-                outlined solo append-icon="far fa-copy" @click:append="copyText" name="input" :readonly="readonly" v-model="summarized_text.summary" v-bind:txt="summarized_text.text" :placeholder="null" :auto-grow="autoGrow" :clearable="!clearable" ></v-textarea>
-               
+        <section class="w-full h-full bodyWrapper" :style="{ 'backgroundImage': 'url(\'' + bgimage + '\')' }">
+            <div class="blurred-box p-6">
+                <div class="wrapper">
+                    <v-row class="mb-4">
+                        <v-col cols="12" xs="12" sm="8">
+                            <v-radio-group row v-model="radio" dense hide-details>
+                                <v-radio label="متن" value="0" color="white"></v-radio>
+                                <v-radio label="آدرس اینترنتی (URL)" value="1" color="white"  class="mr-16"></v-radio>
+                            </v-radio-group>
+                        </v-col>
+                        <!--  <v-col cols="12" sm="0">
+                            <div></div> 
+                        </v-col> -->
+
+                        <v-col cols="12" xs="12" sm="4">
+                            <v-btn @click="textBriefer" color="error" dark x-large class="float-left" :loading="loadingState">خلاصه‌سازی</v-btn>
+                        </v-col>
+                    </v-row>
+                    
+                    
+                    <v-text-field v-model="raw_text" :clearable="clearable" clear-icon="fas fa-times" v-if="radio == '1'" :placeholder="url_placeholder" outlined background-color="#00000065" class="white--text" color="white" rows="2" no-resize style="direction:ltr;" name="url-input" >
+                    </v-text-field>
+
+                    <v-textarea rows="8" no-resize :auto-grow="!autoGrow" v-model="raw_text" :clearable="clearable" clear-icon="fas fa-times" v-else outlined background-color="#00000065" color="white" class="white--text" name="text-input" :placeholder="textAreaPlaceholder">
+                    </v-textarea>
+                    
+                    <v-textarea outlined :auto-grow="autoGrow" append-icon="far fa-copy" @click:append="copyText" :readonly="readonly" name="text-output" color="white" background-color="#00000065" :value="summarized_text">
+                    </v-textarea>
                 </div>
-            </v-col>
-        </v-row>
-
-        <v-row>
-                    <v-col class="d-flex thick bot-btn" cols="12" xs="3" sm="6" md="2" lg="2" xl="1">
-            <v-btn :x-large="x_larged" color="#0f4c81" class="btn white--text" @click="textBriefer">خلاصه سازی</v-btn>
-        </v-col>
-        </v-row>
-    </v-container>
+            </div>
+        </section>
+    </div>
 </template>
 
-    <script>
-        export default {
-        data: () => ({
-        defaultItem: {
-        id: 0,
-        text: 'فارسی (Persian)',
-    },
-    items:[
-            {
-                id: 0,
-                text: 'فارسی (Persian)',
-            },
-            {
-                id: 1,
-                text: 'انگلیسی (English)',
-            },
-            {
-                id: 2,
-                text: 'آلمانی (Deutch)',
-            },
-            {
-                id: 3,
-                text: 'فرانسوی (French)',
-            }
-        ],
-        language:'',
-        raw_text:'',
-        summarized_text:{},
-        api_key:'',
+<script>
+export default {
+    data: () => ({
+        bgimage: require('../assets/3424974.jpg'),
 
-        placeholder:"متن خود را در این قسمت وارد کنید.",
-        x_larged: true,
-        autoGrow: true,
+        radio: '0',
+        summarized_text: '',
+        raw_text: '',
+        
+        loadingState: false,
         clearable: true,
-        readonly: true,
-        }),
-        methods:{
-            textBriefer(e){
-                e.preventDefault();
-                let currentObj = this;
-                this.axios.post('http://api.summarizer.syfract.com/bert',{
-                    text: this.raw_text
-                }).then(function (response){
-                    currentObj.summarized_text = response.data;
-                })
-                .catch(function(error){
-                    currentObj.summarized_text = error;
-                })
-                },
-            // setResults(result){
-            //     this.summarized_text = result;
-            // },
-            copyText(){
-                this.$copyText(this.summarized_text.text).then((e)=>{
-                    alert('copied:' + this.summarized_text.text)
-                    console.log(e)
-                },(e)=>{alert('can not copy')
-                console.log(e)})
-            console.log("hi im copied")
-            }
+        autoGrow:true,
+        readonly:true,
+        
+        url_placeholder:'https://www.example.com/summarizer/syfract/api',
+        textAreaPlaceholder: 'متن خود را در این کادر وارد کنید.'
+    }),
+    methods:{
+        textBriefer: function(){
+            this.loadingState = true;
+            let self = this;
+            this.axios.post('http://api.summarizer.syfract.com/bert',{
+                text: self.raw_text
+            }).then(function (response){
+                self.summarized_text = response.data.summary;
+                self.loadingState = false;
+            })
+            .catch(function(error){
+                console.error(error);
+                self.summarized_text = "خطایی در دریافت اطلاعات از سرور رخ داد";
+                self.loadingState = false;
+            })
+            
         },
-    }
-    </script>
 
-    <style>
+        copyText(){
+            this.$copyText(this.summarized_text).then((e)=>{
+                alert('خلاصه متن در کلیپ‌بورد کپی شد.')
+                console.log(e)
+            },(e)=>{alert('can not copy')
+            console.log(e)})
+        console.log("hi im copied")
+        }
+    },
+    mounted() {
+        /* eslint-disable */
+        particlesJS.load('particles-js', '@/assets/particles.json', function() {
+            console.log('callback - particles.js config loaded');
+        });
+    },
+    watch: {
+        "radio": function() {
+            this.raw_text = "";
+        }
+    }
+}
+</script>
+
+<style>
     .d-inline-flex{
         direction: ltr;
     }
@@ -122,4 +127,121 @@
             visibility: visible  !important
         }
     }
-    </style>
+
+    .header{
+        background: linear-gradient(-45deg, #ee7752, #e73c7e,#23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        color: white;
+    }
+    .headerWrapper{
+        height: 150px;
+        position: relative;
+    }
+    .headerCover{
+        position: absolute;
+        background: transparent;
+        display: block;
+        left: 50%;
+        margin-left: -150px;
+        width: 300px;
+        top: 50%;
+        height: 50px;
+        margin-top: -50px;
+        color: white;
+    }
+    @keyframes gradient{
+        0% {
+            background-position: 0% 50%;
+        }
+        50%{
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .headerTitle{
+        font-size: 2rem;
+        min-width: 220px;
+        width: 316px;
+        margin: auto;
+    }
+    .headerSubtitle{
+        font-size: 1.25rem;
+        display: block;
+        min-width: 220px;
+        width: 316px;
+        margin: auto;
+    }
+
+    .bodyWrapper{
+        height: auto;
+        min-height: calc(100% - 144px);
+        padding: 20px;
+        position: absolute;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: top;
+        /* background-image:url(http://bit.ly/2gPLxZ4); */
+        /* background-image: url('~./assets/3424974.jpg'); */
+        
+        font-family: Arial, Helvetica;
+        letter-spacing: 0.02em;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .blurred-box{
+        max-width: 1300px;
+        width: 100%;
+        height: 80vh;
+        background: inherit;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 30px auto;
+        position: relative;
+        /* backdrop-filter: blur(20px); */
+    }
+
+    .blurred-box:after{
+        content: '';
+        height: 90vh;
+        background: inherit; 
+        position: absolute;
+        filter: blur(20px);
+        left: 0;
+        bottom: 0;
+        top: 0;
+        right: 0;
+    }
+
+    .wrapper{
+        position: relative;
+        margin-top: 50px;
+        text-align: center;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .v-radio .v-label{
+        font-family: IranSansRegular;
+        color: white !important;
+        font-size: 1rem !important;
+        direction: rtl;
+    }
+
+   .v-textarea .v-label{
+        font-family: IranSansRegular;
+        font-weight: 900;
+        color: rgb(255, 255, 255) !important;
+        font-size: .95rem !important;
+    }
+
+    .v-textarea{
+        resize: both !important;
+        font-family: IranSansRegular;
+    }
+
+</style>

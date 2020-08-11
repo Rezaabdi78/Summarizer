@@ -1,18 +1,20 @@
 <template>
   <v-app>
-  <div id="app">
-    <Header/>
-    <router-view/>
-  </div>
+    <div id="app">
+        <!-- <Header/> -->
+        <router-view/>
+        <!-- <newBody></newBody> -->
+    </div>
   </v-app>
 </template>
 
 <script>
 import './assets/full.css'
-import Header from "./components/header"
+// import newBody from "./components/newBody"
+
 export default {
   components:{
-    Header
+    // newBody
   }
 }
 </script>
@@ -40,4 +42,50 @@ export default {
   height: 100%;
 }
 
+.theme--light .v-icon{
+  color: white  !important;
+}
+.theme--light.v-text-field--solo > .v-inputcontrol > .v-inputslot {
+    background: rgba(255,255,255,0.5) !important;
+}
+
+textarea::-webkit-input-placeholder {
+  color: rgba(255,255,255,0.5) !important;  
+}
+
+textarea:-moz-placeholder { /* Firefox 18- */
+  color: rgba(255,255,255,0.5) !important;  
+}
+
+textarea::-moz-placeholder {  /* Firefox 19+ */
+  color: rgba(255,255,255,0.5) !important;  
+}
+
+textarea:-ms-input-placeholder {
+  color: rgba(255,255,255,0.5) !important;  
+}
+
+textarea::placeholder {
+  color: rgba(255,255,255,0.5) !important;  
+}
+
+.theme--light .v-input textarea{
+  color: #eaeaea !important;
+}
+.theme--light .v-input input{
+  color: #eaeaea !important;
+}
+input::placeholder {
+  color: rgba(255,255,255,0.5) !important;  
+}
+.v-btn__content{
+    letter-spacing: initial !important;
+    font-family: VazirBold !important;
+    font-size: 1.1rem !important;
+}
+
+.theme--light .v-icon{
+  color: white  !important;
+  font-size: 16px !important;
+}
 </style>
