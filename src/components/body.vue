@@ -3,7 +3,7 @@
         <header class="headerWrapper">
             <div class="headerCover">
                 <h1 class="headerTitle thick mb-4">خلاصه‌ساز هوشمند متن</h1>
-                <h3 class="headerSubtitle">قدرت‌گرفته از منبع قدرت</h3>        
+                <h3 class="headerSubtitle">قدرت‌گرفته از سای‎فرکت (Syfract)</h3>        
             </div>
             <div id="particles-js" class="header">
             </div>
@@ -25,18 +25,51 @@
                         </v-col> -->
 
                         <v-col cols="12" xs="12" sm="4">
-                            <v-btn @click="textBriefer" color="error" dark x-large class="float-left" :loading="loadingState">خلاصه‌سازی</v-btn>
+                            <v-btn @click="textBriefer" color="error" dark large class="float-left" :loading="loadingState">خلاصه‌سازی</v-btn>
                         </v-col>
                     </v-row>
                     
                     
-                    <v-text-field v-model="raw_text" :clearable="clearable" clear-icon="fas fa-times" v-if="radio == '1'" :placeholder="url_placeholder" outlined background-color="#00000065" class="white--text" color="white" rows="2" no-resize style="direction:ltr;" name="url-input" >
+                    <v-text-field
+                    v-model="raw_text"
+                    :clearable="clearable"
+                    clear-icon="fas fa-times"
+                    v-if="radio == '1'"
+                    :placeholder="url_placeholder"
+                    outlined
+                    background-color="#00000065"
+                    class="white--text"
+                    color="white" rows="2"
+                    no-resize
+                    style="direction:ltr;"
+                    name="url-input" >
                     </v-text-field>
 
-                    <v-textarea rows="8" no-resize :auto-grow="!autoGrow" v-model="raw_text" :clearable="clearable" clear-icon="fas fa-times" v-else outlined background-color="#00000065" color="white" class="white--text" name="text-input" :placeholder="textAreaPlaceholder">
+                    <v-textarea
+                    rows="8"
+                    no-resize
+                    :auto-grow="!autoGrow"
+                    v-model="raw_text"
+                    
+                    v-else
+                    outlined
+                    background-color="#00000065"
+                    color="white"
+                    class="white--text"
+                    name="text-input"
+                    :placeholder="textAreaPlaceholder">
                     </v-textarea>
                     
-                    <v-textarea outlined :auto-grow="autoGrow" append-icon="far fa-copy" @click:append="copyText" :readonly="readonly" name="text-output" color="white" background-color="#00000065" :value="summarized_text">
+                    <v-textarea
+                    outlined
+                    :auto-grow="autoGrow"
+                    append-icon="far fa-copy"
+                    @click:append="copyText"
+                    :readonly="readonly"
+                    name="text-output"
+                    color="white"
+                    background-color="#00000065"
+                    :value="summarized_text">
                     </v-textarea>
                 </div>
             </div>
@@ -58,14 +91,14 @@ export default {
         autoGrow:true,
         readonly:true,
         
-        url_placeholder:'https://www.example.com/summarizer/syfract/api',
+        url_placeholder: 'https://www.zoomit.ir/2016/4/20/129560/be-kind-to-artificial-intelligence/',
         textAreaPlaceholder: 'متن خود را در این کادر وارد کنید.'
     }),
     methods:{
         textBriefer: function(){
             this.loadingState = true;
             let self = this;
-            this.axios.post('http://api.summarizer.syfract.com/bert',{
+            this.axios.post('https://api.summarizer.syfract.com/bert',{
                 text: self.raw_text
             }).then(function (response){
                 self.summarized_text = response.data.summary;
@@ -196,10 +229,13 @@ export default {
     .blurred-box{
         max-width: 1300px;
         width: 100%;
-        height: 80vh;
+        /* height: 80vh; */
+        height: auto;
         background: inherit;
-        border-radius: 10px;
-        overflow: hidden;
+        border-radius: 20px;
+        border-width: 1px;
+        border-color: #202020;
+        /* overflow: hidden; */
         margin: 30px auto;
         position: relative;
         /* backdrop-filter: blur(20px); */
@@ -207,7 +243,7 @@ export default {
 
     .blurred-box:after{
         content: '';
-        height: 90vh;
+        /* height: 90vh; */
         background: inherit; 
         position: absolute;
         filter: blur(20px);
@@ -215,11 +251,12 @@ export default {
         bottom: 0;
         top: 0;
         right: 0;
+
     }
 
     .wrapper{
         position: relative;
-        margin-top: 50px;
+        /* margin-top: 50px; */
         text-align: center;
         z-index: 1;
         width: 100%;
