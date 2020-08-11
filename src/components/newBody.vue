@@ -57,7 +57,7 @@ items:[
             this.snackbar = true;
             e.preventDefault();
             let currentObj = this;
-            this.axios.post('http://api.summarizer.syfract.com/bert',{
+            this.axios.post('https://api.summarizer.syfract.com/bert',{
                 text: this.raw_text
             }).then(function (response){
                 currentObj.summarized_text = response.data;
@@ -76,7 +76,6 @@ items:[
                 console.log(e)
             },(e)=>{alert('can not copy')
             console.log(e)})
-        console.log("hi im copied")
         }
     },
 }
