@@ -124,7 +124,7 @@ export default {
     mounted() {
         /* eslint-disable */
         particlesJS.load('particles-js', '@/assets/particles.json', function() {
-            console.log('callback - particles.js config loaded');
+            // console.log('callback - particles.js config loaded');
         });
     },
     watch: {
@@ -135,7 +135,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .d-inline-flex{
         direction: ltr;
     }

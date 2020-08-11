@@ -8,12 +8,8 @@
 
 <script>
 import './assets/full.css'
-// import newBody from "./components/newBody"
 
 export default {
-  components:{
-    // newBody
-  }
 }
 </script>
 
