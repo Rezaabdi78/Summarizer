@@ -65,7 +65,7 @@ export default {
         textBriefer: function(){
             this.loadingState = true;
             let self = this;
-            this.axios.post('http://api.summarizer.syfract.com/bert',{
+            this.axios.post('https://api.summarizer.syfract.com/bert',{
                 text: self.raw_text
             }).then(function (response){
                 self.summarized_text = response.data.summary;
@@ -85,7 +85,6 @@ export default {
                 console.log(e)
             },(e)=>{alert('can not copy')
             console.log(e)})
-        console.log("hi im copied")
         }
     },
     mounted() {
