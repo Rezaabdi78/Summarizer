@@ -99,7 +99,7 @@ export default {
             this.loadingState = true;
             let self = this;
             this.axios.post('https://api.summarizer.syfract.com/bert',{
-                text: self.raw_text
+                [self.radio == '0' ? 'text' : 'url']: self.raw_text
             }).then(function (response){
                 self.summarized_text = response.data.summary;
                 self.loadingState = false;
