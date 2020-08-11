@@ -10,6 +10,9 @@
 import './assets/full.css'
 
 export default {
+    beforeCreate () {
+        document.title = "خلاصه‌ساز هوشمند متن";
+    }
 }
 </script>
 
