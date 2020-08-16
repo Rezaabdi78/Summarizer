@@ -71,7 +71,35 @@
                     background-color="#00000065"
                     :value="summarized_text">
                     </v-textarea>
+                
                 </div>
+                    <div v-show="loadingState" class="timer stack-top px-16">
+
+                        <img :src="logoimage" class="inline-block mt-16 rotatingLogo">
+
+                        <div class="my-8 ">
+                            <h2 class="py-4">{{processing}}</h2>
+                            <h1 class="py-4" v-if="!indeterminate">{{estimatedTime}} {{maxSeconds}} ثانیه</h1>
+                            <h1 class="py-4" v-else>در حال دریافت اطلاعات از سرور...</h1>
+                        </div>
+
+                        <v-progress-linear
+                        :active="active"
+                        :background-opacity="opacity"
+                        :bottom="bottom"
+                        :buffer-value="buffer"
+                        :height="height"
+                        :indeterminate="indeterminate"
+                        :query="query"
+                        :rounded="rounded"
+                        :stream="stream"
+                        :striped="striped"
+                        :top="top"
+                        :reverse="reverse"
+                        :value="value"
+                        color="white"
+                        ></v-progress-linear>
+                    </div>
             </div>
         </section>
     </div>
@@ -81,7 +109,11 @@
 export default {
     data: () => ({
         bgimage: require('../assets/3424974.jpg'),
+        logoimage:require('../assets/logo.png'),
 
+        textLength: 0,
+        maxSeconds:0,
+        currentSecond:0,
         radio: '0',
         summarized_text: '',
         raw_text: '',
@@ -90,14 +122,41 @@ export default {
         clearable: true,
         autoGrow:true,
         readonly:true,
+        absolute: false,
+        reverse:true,
+        active: true,
+        opacity: 0.3,
+        bottom: false,
+        buffer: 100,
+        fixed: false,
+        height: 8,
+        indeterminate: false,
+        query: false,
+        rounded: true,
+        stream: false,
+        striped: false,
+        top: false,
+        value: 0,
         
         url_placeholder: 'https://www.zoomit.ir/2016/4/20/129560/be-kind-to-artificial-intelligence/',
-        textAreaPlaceholder: 'متن خود را در این کادر وارد کنید.'
+        textAreaPlaceholder: 'متن خود را در این کادر وارد کنید.',
+        processing:'متن شما در حال پردازش است.',
+        estimatedTime:'زمان باقی‌مانده تخمین زده شده برای اتمام پردازش و خلاصه سازی: '
     }),
     methods:{
         textBriefer: function(){
+            if (this.radio=='0') {
+                this.textLength = this.raw_text.length;
+                this.maxSeconds = Math.round((Math.floor(this.textLength)/1000)*20);
+                this.currentSecond = 0;
+
+            }else{
+                //find the length of text in url
+            }
+            this.indeterminate = false;
             this.loadingState = true;
             let self = this;
+            self.countdownTimer();
             this.axios.post('https://api.summarizer.syfract.com/bert',{
                 [self.radio == '0' ? 'text' : 'url']: self.raw_text
             }).then(function (response){
@@ -106,12 +165,35 @@ export default {
             })
             .catch(function(error){
                 console.error(error);
-                self.summarized_text = "خطایی در دریافت اطلاعات از سرور رخ داد";
+                if (self.textLength < 350) {
+                    self.summarized_text = "متن وارده شده به اندازه کافی طولانی نیست و قابل خلاصه‌سازی نمی‌باشد!";
+                }else{
+                     self.summarized_text = "خطایی در دریافت اطلاعات از سرور رخ داد";
+                }
                 self.loadingState = false;
             })
             
         },
-
+        countdownTimer:function(){
+            let self = this;
+            if (self.maxSeconds > 0) {
+                setTimeout(()=>{
+                    self.indeterminate = false;
+                    console.log(self.maxSeconds)
+                    self.maxSeconds -= 1;
+                    self.currentSecond += 1;
+                    self.value = Math.ceil((100*self.currentSecond)/Math.round((Math.floor(this.textLength)/1000)*20))
+                    self.countdownTimer()},1000
+                )
+            }else{
+                self.indeterminate = true;
+                setTimeout(()=>{
+                    self.query = !self.query;
+                    self.countdownTimer();
+                },975)
+            }
+        },
+        
         copyText(){
             this.$copyText(this.summarized_text).then((e)=>{
                 alert('خلاصه متن در کلیپ‌بورد کپی شد.')
@@ -125,13 +207,14 @@ export default {
         /* eslint-disable */
         particlesJS.load('particles-js', '@/assets/particles.json', function() {
             // console.log('callback - particles.js config loaded');
-        });
+        })
     },
     watch: {
         "radio": function() {
             this.raw_text = "";
         }
     }
+
 }
 </script>
 
@@ -181,7 +264,7 @@ export default {
         top: 50%;
         height: 50px;
         margin-top: -50px;
-        color: white;
+        color: #efefef;
     }
     @keyframes gradient{
         0% {
@@ -281,4 +364,44 @@ export default {
         font-family: IranSansRegular;
     }
 
+    .stack-top{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+    .timer{
+        background-color: rgba(0, 0, 0, 0.801);
+        border-radius: inherit;
+        
+        color:#efefef
+    }
+    .timer h1{
+        font-family: VazirBlack;
+        font-weight: 400;
+        font-size: 1.20rem;
+    }
+    .timer h2{
+        font-family: IranSansRegular;
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .rotatingLogo{
+        animation: rotation 4s infinite linear;
+    }
+    @keyframes rotation {
+        0%{
+            transform: rotate(0deg) ;
+        }
+        50%{
+            transform: rotate(360deg);
+        }
+        100%{
+            transform: rotate(0deg);
+            ;
+        }
+    }
 </style>

@@ -85,4 +85,7 @@ input::placeholder {
   color: white  !important;
   font-size: 16px !important;
 }
+.theme--light .v-label{
+  color: white !important;
+}
 </style>
