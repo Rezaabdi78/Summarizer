@@ -1,4 +1,4 @@
-# vue-briefer
+# vue-Summarizer
 
 ## Project setup
 ```
